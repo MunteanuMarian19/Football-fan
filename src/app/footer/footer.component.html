@@ -1,0 +1,30 @@
+<footer>
+  <h6 class="footer">
+    <div *ngIf="showImportantNote" class="important-note">
+      <button class="close-btn" (click)="toggleImportantNote()">X</button>
+      <p>{{ footer }}</p>
+    </div>
+
+    <h6 class="footer">
+      <div class="footer-text">
+        Contact
+        <a
+          href="https://www.linkedin.com/in/munteanu-marian-9a801ba6/"
+          target="_blank"
+        >
+          <img
+            class="linkedin-avatar"
+            src="./../../assets/linkedin.svg"
+            alt="Linkedin"
+          />
+        </a>
+        &copy; {{ currentYear }}
+      </div>
+    </h6>
+    <div class="footer-btn">
+      <button class="btn-footer" (click)="toggleImportantNote()">
+        Note for Mobile
+      </button>
+    </div>
+  </h6>
+</footer>

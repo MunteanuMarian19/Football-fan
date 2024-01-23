@@ -1,0 +1,78 @@
+@import "../scss/common-styling.scss";
+@import "../scss/team_player_responsive.scss";
+
+.sub-info {
+  margin: 0;
+  .info-team,
+  .info-league,
+  .info-country {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    justify-content: space-evenly;
+    text-align: center;
+
+    background-color: $sub-infos-background;
+    border-radius: var(--radius10);
+    margin-bottom: 1rem;
+
+    h2,
+    h3 {
+      border-radius: var(--radius10);
+      margin-bottom: 0;
+      font-size: 5vw;
+    }
+  }
+
+  .season-results {
+    text-align: center;
+    background-color: $sub-infos-background;
+    border-radius: var(--radius10);
+
+    :last-child {
+      margin-top: 1rem !important;
+      margin-bottom: 0;
+    }
+
+    h2,
+    h3 {
+      border-radius: var(--radius10);
+      font-size: 4vw;
+    }
+
+    h3 {
+      word-wrap: anywhere;
+    }
+  }
+}
+
+.stats > * {
+  h3 {
+    text-align: center;
+    background-color: $h2_h3_h4_a-background;
+    padding: 0.5rem !important;
+    margin-bottom: 1rem;
+    border-radius: var(--radius10);
+    font-size: 1.7rem;
+  }
+
+  .team-lineup-formation {
+    margin-bottom: 1rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+@media (min-width: 769px) {
+  .sub-info {
+    h2 {
+      font-size: 1.8vw !important;
+    }
+    h3 {
+      font-size: 1.7vw !important;
+    }
+  }
+}

@@ -1,0 +1,426 @@
+<div class="container-fluid">
+  <div class="info">
+    <div class="input-container form-control">
+      <div class="input form-group">
+        <label for="playerName" class="form-label">Player Name:</label>
+        <input
+          type="text"
+          placeholder="player"
+          id="playerName"
+          [(ngModel)]="playerName"
+          name="playerName"
+          required
+          class="form-control"
+        />
+      </div>
+
+      <div class="input form-group">
+        <label for="teamName" class="form-label">Team Name:</label>
+        <input
+          type="text"
+          placeholder="team"
+          id="teamName"
+          [(ngModel)]="teamName"
+          name="teamName"
+          required
+          class="form-control"
+        />
+      </div>
+
+      <div class="input form-group">
+        <label for="season" class="form-label">Season:</label>
+        <input
+          type="number"
+          placeholder="year"
+          id="season"
+          [(ngModel)]="season"
+          name="season"
+          required
+          class="form-control"
+        />
+      </div>
+
+      <button class="btn btn-primary search-btn" (click)="searchPlayer()">
+        Search Player
+      </button>
+    </div>
+
+    <!-- /////////////////////////////////////////// PLayer Info //////////////////////////////////////////////// -->
+    <div *ngIf="playerStats?.player" class="sub-info">
+      <div class="name-picture">
+        <h2>
+          {{ playerStats.player.name || "Data N/A" }}
+        </h2>
+        <img
+          *ngIf="playerStats.player.photo"
+          [src]="playerStats.player.photo"
+          alt="Player Photo"
+        />
+      </div>
+
+      <p>
+        First Name:
+        <strong>{{ playerStats.player.firstname || "Data N/A" }}</strong>
+      </p>
+      <p>
+        Last Name:
+        <strong>{{ playerStats.player.lastname || "Data N/A" }}</strong>
+      </p>
+      <p>
+        Age: <strong>{{ playerStats.player.age || "Data N/A" }}</strong> years
+        old
+      </p>
+      <p>
+        <strong>
+          {{ playerStats.player.birth.date || "Birth Date N/A" }},
+          {{ playerStats.player.birth.placec || "Birth Place N/A" }},
+          {{ playerStats.player.birth.country || "Birth Country N/A" }}</strong
+        >
+      </p>
+      <p>
+        Nationality:
+        <strong>{{ playerStats.player.nationality || "Data N/A" }}</strong>
+      </p>
+      <p>
+        Height: <strong>{{ playerStats.player.height || "Data N/A" }}</strong>
+      </p>
+      <p>
+        Weight: <strong>{{ playerStats.player.weight || "Data N/A" }}</strong>
+      </p>
+      <p>
+        Injured:
+        <strong>{{
+          playerStats.player.injured ? "Yes" : "No" || "Data N/A"
+        }}</strong>
+      </p>
+    </div>
+  </div>
+
+  <!-- /////////////////////////////////// Display "Loading" if showHeading is true ///////////////////////////////////// -->
+  <div *ngIf="showHeading" class="loading-message">
+    <h3>Loading data, please wait...</h3>
+  </div>
+
+  <!-- //////////////// Display a message when the button is clicked and playerStats is null (empty response) /////////// -->
+  <div
+    *ngIf="buttonClicked && !playerStats && apiResponseReceived"
+    class="error-message"
+  >
+    <h3>Data for this player, team and season could not be found.</h3>
+    <h3>
+      Please double-check the accuracy of each name (Last Name, or Last Name +
+      First Name) and season.
+    </h3>
+    <h3>
+      Also, ensure that the player was part of this team during the specified
+      year.
+    </h3>
+  </div>
+
+  <!-- //////////////////////////////////////////////// Teams- Info //////////////////////////////////////////////////////// -->
+  <div *ngIf="playerStats?.statistics">
+    <div *ngFor="let stats of filterUniqueStatistics(playerStats.statistics)">
+      <div *ngIf="stats.team && apiResponseReceived" class="stats">
+        <div class="team-competition">
+          <div class="name-picture">
+            <h3>
+              {{ stats.team.name || "Data N/A" }}
+            </h3>
+            <ng-container *ngIf="stats.team.logo; else noTeamLogo">
+              <img [src]="stats.team.logo" alt="{{ stats.team.name }} Logo" />
+            </ng-container>
+            <ng-template #noTeamLogo>
+              <h3><strong>Logo N/A </strong></h3>
+            </ng-template>
+          </div>
+
+          <div class="name-picture">
+            <h4>
+              {{ stats.league.name || "Data N/A" }}
+            </h4>
+            <ng-container *ngIf="stats.league.logo; else noLeagueLogo">
+              <img [src]="stats.league.logo" alt="{{ stats.league.logo }}" />
+            </ng-container>
+            <ng-template #noLeagueLogo>
+              <h4><strong> Logo N/A </strong></h4>
+            </ng-template>
+          </div>
+
+          <div class="name-picture">
+            <h4>
+              {{ stats.league.country || "World" }}
+            </h4>
+            <ng-container *ngIf="stats.league.flag; else noLeagueFlag">
+              <img [src]="stats.league.flag" alt="{{ stats.league.flag }}" />
+            </ng-container>
+            <ng-template #noLeagueFlag>
+              <h4><strong> Flag N/A </strong></h4></ng-template
+            >
+          </div>
+        </div>
+
+        <!-- /////////////////////////////////////////////////////// Player stats ///////////////////////////////////////////////////////////// -->
+        <div *ngIf="stats.games" class="stats-games">
+          <h4>Games</h4>
+          <p>
+            Appearances:
+            <strong>{{
+              getNonNullValuePlayers(stats.games.appearences) || "Data N/A"
+            }}</strong>
+          </p>
+          <!-- "appearences" as in the API and not "appearances" the correct word -->
+          <p>
+            Lineups:
+            <strong>{{
+              getNonNullValuePlayers(stats.games.lineups) || "Data N/A"
+            }}</strong>
+          </p>
+          <p>
+            Minutes:
+            <strong>{{
+              getNonNullValuePlayers(stats.games.minutes) || "Data N/A"
+            }}</strong>
+          </p>
+          <p>
+            Position:
+            <strong>{{
+              getNonNullValuePlayers(stats.games.position) || "Data N/A"
+            }}</strong>
+          </p>
+          <p>
+            Rating:
+            <strong>{{
+              getNonNullValuePlayers(stats.games.rating | number : "1.2-2") ||
+                "Data N/A"
+            }}</strong>
+          </p>
+          <p>
+            Captain:
+            <strong>{{
+              getNonNullValuePlayers(stats.games.captain ? "Yes" : "No")
+            }}</strong>
+          </p>
+        </div>
+
+        <div *ngIf="stats.substitutes" class="stats-substitutes">
+          <h4>Substitutes</h4>
+          <p>
+            In:
+            <strong>{{
+              getNonNullValuePlayers(stats.substitutes.in) || "Data N/A"
+            }}</strong>
+          </p>
+          <p>
+            Out:
+            <strong>{{
+              getNonNullValuePlayers(stats.substitutes.out) || "Data N/A"
+            }}</strong>
+          </p>
+          <p>
+            Bench:
+            <strong>{{
+              getNonNullValuePlayers(stats.substitutes.bench) || "Data N/A"
+            }}</strong>
+          </p>
+        </div>
+
+        <div *ngIf="stats.shots" class="stats-shots">
+          <h4>Shots</h4>
+          <p>
+            Total:
+            <strong>{{
+              getNonNullValuePlayers(stats.shots.total) || "Data N/A"
+            }}</strong>
+          </p>
+          <p>
+            On Target:
+            <strong>{{
+              getNonNullValuePlayers(stats.shots.on) || "Data N/A"
+            }}</strong>
+          </p>
+        </div>
+
+        <div *ngIf="stats.goals" class="stats-goals">
+          <h4>Goals</h4>
+          <p>
+            Total:
+            <strong>{{
+              getNonNullValuePlayers(stats.goals.total) || "Data N/A"
+            }}</strong>
+          </p>
+          <p>
+            Conceded:
+            <strong>{{
+              getNonNullValuePlayers(stats.goals.conceded) || "Data N/A"
+            }}</strong>
+          </p>
+          <p>
+            Assists:
+            <strong>{{
+              getNonNullValuePlayers(stats.goals.assists) || "Data N/A"
+            }}</strong>
+          </p>
+          <p>
+            Saves:
+            <strong>{{
+              getNonNullValuePlayers(stats.goals.saves) || "Data N/A"
+            }}</strong>
+          </p>
+        </div>
+
+        <div *ngIf="stats.passes" class="stats-passes">
+          <h4>Passes</h4>
+          <p>
+            Total:
+            <strong>{{
+              getNonNullValuePlayers(stats.passes.total) || "Data N/A"
+            }}</strong>
+          </p>
+          <p>
+            Key Passes:
+            <strong>{{
+              getNonNullValuePlayers(stats.passes.key) || "Data N/A"
+            }}</strong>
+          </p>
+          <p>
+            Key Pass Accuracy:
+            <!-- without "true" parameter as in team-stats.component.html to work -->
+            <strong>{{
+              getNonNullValuePlayers(stats.passes.accuracy) + "(%)" ||
+                "Data N/A"
+            }}</strong>
+            <!-- for player-stats component, "accuracy" property from API is a number, not a percentage as in team-stats component -->
+            <!--  //i didn't modify the code for consistency -->
+          </p>
+        </div>
+
+        <div *ngIf="stats.tackles" class="stats-tackles">
+          <h4>Tackles</h4>
+          <p>
+            Total:
+            <strong>{{
+              getNonNullValuePlayers(stats.tackles.total) || "Data N/A"
+            }}</strong>
+          </p>
+          <p>
+            Blocks:
+            <strong>{{
+              getNonNullValuePlayers(stats.tackles.blocks) || "Data N/A"
+            }}</strong>
+          </p>
+          <p>
+            Interceptions:
+            <strong>{{
+              getNonNullValuePlayers(stats.tackles.interceptions) || "Data N/A"
+            }}</strong>
+          </p>
+        </div>
+
+        <div *ngIf="stats.duels" class="stats-duels">
+          <h4>Duels</h4>
+          <p>
+            Total:
+            <strong>{{
+              getNonNullValuePlayers(stats.duels.total) || "Data N/A"
+            }}</strong>
+          </p>
+          <p>
+            Won:
+            <strong>{{
+              getNonNullValuePlayers(stats.duels.won) || "Data N/A"
+            }}</strong>
+          </p>
+        </div>
+
+        <div *ngIf="stats.dribbles" class="stats-dribbles">
+          <h4>Dribbles</h4>
+          <p>
+            Attempts:
+            <strong>{{
+              getNonNullValuePlayers(stats.dribbles.attempts) || "Data N/A"
+            }}</strong>
+          </p>
+          <p>
+            Success:
+            <strong>{{
+              getNonNullValuePlayers(stats.dribbles.success) || "Data N/A"
+            }}</strong>
+          </p>
+          <p>
+            Past:
+            <strong>{{
+              getNonNullValuePlayers(stats.dribbles.past) || "Data N/A"
+            }}</strong>
+          </p>
+        </div>
+
+        <div *ngIf="stats.fouls" class="stats-fouls">
+          <h4>Fouls</h4>
+          <p>
+            Drawn:
+            <strong>{{
+              getNonNullValuePlayers(stats.fouls.drawn) || "Data N/A"
+            }}</strong>
+          </p>
+          <p>
+            Committed:
+            <strong>{{
+              getNonNullValuePlayers(stats.fouls.committed) || "Data N/A"
+            }}</strong>
+          </p>
+        </div>
+
+        <div *ngIf="stats.cards" class="stats-cards">
+          <h4>Cards</h4>
+          <p>
+            Yellow:
+            <strong>{{
+              getNonNullValuePlayers(stats.cards.yellow) || "Data N/A"
+            }}</strong>
+          </p>
+          <p>
+            Red:
+            <strong>{{
+              getNonNullValuePlayers(stats.cards.red) || "Data N/A"
+            }}</strong>
+          </p>
+        </div>
+
+        <div *ngIf="stats.penalty" class="stats-penalty">
+          <h4>Penalty</h4>
+          <p>
+            Scored:
+            <strong>{{
+              getNonNullValuePlayers(stats.penalty.scored) || "Data N/A"
+            }}</strong>
+          </p>
+          <p>
+            Missed:
+            <strong>{{
+              getNonNullValuePlayers(stats.penalty.missed) || "Data N/A"
+            }}</strong>
+          </p>
+          <p>
+            Won:
+            <strong>{{
+              getNonNullValuePlayers(stats.penalty.won) || "Data N/A"
+            }}</strong>
+          </p>
+          <p>
+            Committed:
+            <strong>{{
+              getNonNullValuePlayers(stats.penalty.commited) || "Data N/A"
+            }}</strong>
+          </p>
+          <!-- "commited" as in the API and not "committed" the correct word -->
+          <p>
+            Saved:
+            <strong>{{
+              getNonNullValuePlayers(stats.penalty.saved) || "Data N/A"
+            }}</strong>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+@import "~bootstrap/dist/css/bootstrap.min.css";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+// /////////////////////////// HOME PAGE /////////////////////////////////
+$main-background: #343541; // bottom color
+
+$nav-background: #000000;
+$nav-link: #dbd8e3;
+$nav-link-hover: #5c5470;
+
+$carousel-background: #0d1117;
+$carousel-caption: #dbd8e3;
+
+$about-message-background: #0d1117;
+$about-message-color: #dbd8e3;
+
+$footer-background: #000000;
+$footer-color: #dbd8e3;
+
+// /////////////////////////// FORMS /////////////////////////////////////
+$input-container: #0d1117;
+$input-container-label: #dbd8e3;
+
+$sub-infos-background: #0d1117;
+$sub-info: #0d1117;
+
+$btn-background: #2a2438;
+$btn-color: #dbd8e3;
+$btn-hover: #352f44;
+$btn-active: #2a2438;
+
+$form-input: #dbd8e3;
+$form-color: #dbd8e3;
+// ///////////////////////////// STATS ///////////////////////////////////
+$stats-background: #0d1117;
+
+$h2_h3_h4_a-background: #2a2438;
+$h2_h3_h4_a-color: #dbd8e3;
+
+$p-background: #2a2438;
+$p-color: #dbd8e3;
+
+// ///////////////////////////// OTHERS //////////////////////////////////
+$error-background: #7c0a02;
+$error-color: #dbd8e3;
+
+$loading-color: #dbd8e3;
+
+// ///////////////////////////////////////////////////////////////////////
+body {
+  background: $main-background;
+  margin: 0;
+  padding: 0;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+}
+
+:root {
+  --box-shadow10px: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  --box-shadow20px: 0px 0px 20px 0px rgba(0, 0, 0, 0.5);
+  --radius10: 10px;
+  --radius15: 15px;
+  --radius20: 20px;
+}

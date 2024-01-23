@@ -1,0 +1,56 @@
+@import "../../styles.scss";
+@import "../scss/common-styling.scss";
+@import "../scss/team_player_responsive.scss";
+
+.name-picture {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  background-color: $h2_h3_h4_a-background;
+  margin-bottom: 1rem;
+  border-radius: var(--radius10);
+  text-align: center;
+
+  h2 {
+    font-size: clamp(1.1rem, 2vw, 1.8rem) !important;
+  }
+
+  h3,
+  h4 {
+    margin-bottom: 0;
+    padding: 0.5rem !important;
+    border-radius: var(--radius10);
+    background-color: $h2_h3_h4_a-background;
+  }
+  p {
+    border-radius: var(--radius10);
+    background: $p-background;
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.stats {
+  h4 {
+    margin-bottom: 1rem;
+    border-radius: var(--radius10);
+    padding: 0.5rem !important;
+    background-color: $h2_h3_h4_a-background !important;
+  }
+  .team-competition {
+    .name-picture {
+      h4 {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 150px) and (max-width: 575px) {
+  .name-picture h3,
+  h4 {
+    font-size: 1rem;
+  }
+}

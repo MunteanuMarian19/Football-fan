@@ -1,0 +1,46 @@
+@import "../../styles.scss";
+
+.navbar {
+  background-color: $nav-background !important;
+  box-shadow: var(--box-shadow20px);
+
+  .navbar-brand {
+    padding-inline: 1.5rem;
+    font-size: 1.5rem;
+    color: $nav-link;
+
+    &:hover {
+      color: $nav-link-hover;
+    }
+  }
+
+  #navbarNav {
+    padding-inline-end: 2rem;
+    ul {
+      li {
+        padding-inline: 2rem;
+        font-size: 1rem;
+        a {
+          padding-inline: 1rem;
+          font-size: 1rem;
+          color: $nav-link;
+        }
+        a:hover {
+          color: $nav-link-hover;
+        }
+      }
+    }
+  }
+
+  button.navbar-toggler {
+    background: $nav-link;
+    padding: 0.2 rem 0.6 rem;
+    transform: scale(0.6);
+    transition: transform 0.3s ease;
+  }
+
+  button.navbar-toggler:hover {
+    transform: scale(0.8);
+    background: $nav-link-hover;
+  }
+}

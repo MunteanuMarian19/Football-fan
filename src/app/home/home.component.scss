@@ -1,0 +1,19 @@
+@import "../../styles.scss";
+
+.about-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: $about-message-background;
+  color: $about-message-color;
+  border-radius: var(--radius15);
+  box-shadow: var(--box-shadow10px);
+  margin: 0 10% 0 10%;
+
+  h3 {
+    margin: 1rem;
+    font-size: clamp(0.9rem, 2vw, 1.8rem);
+  }
+}

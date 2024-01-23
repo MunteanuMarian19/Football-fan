@@ -1,0 +1,1007 @@
+<div class="container-fluid">
+  <div class="info">
+    <div class="input-container form-control">
+      <div class="input form-group">
+        <label for="teamName" class="form-label">Team Name:</label>
+        <input
+          type="text"
+          placeholder="team"
+          id="teamName"
+          [(ngModel)]="teamName"
+          name="teamName"
+          required
+          class="form-control"
+        />
+      </div>
+
+      <div class="input form-group">
+        <label for="league" class="form-label">Competition Name:</label>
+        <input
+          type="text"
+          placeholder="competition"
+          id="league"
+          [(ngModel)]="league"
+          name="league"
+          required
+          class="form-control"
+        />
+      </div>
+
+      <div class="input form-group">
+        <label for="season" class="form-label">Season:</label>
+        <input
+          type="number"
+          placeholder="year"
+          id="season"
+          [(ngModel)]="season"
+          name="season"
+          required
+          class="form-control"
+        />
+      </div>
+
+      <!-- <div class="search-button"> -->
+      <button class="btn btn-primary search-btn" (click)="searchTeam()">
+        Search Team
+      </button>
+      <!-- </div> -->
+    </div>
+    <!-- ///////////////////////////////////////////// STATS RESULTS ////////////////////////////////////////////////////// -->
+
+    <div *ngIf="teamStats && teamStats?.form !== null" class="sub-info">
+      <div class="info-team">
+        <h2>{{ teamStats.team.name || "Data N/A" }}</h2>
+        <!-- Team Logo -->
+        <img
+          *ngIf="teamStats.team.logo"
+          [src]="teamStats.team.logo"
+          alt="Team Logo"
+        />
+      </div>
+      <!-- League Logo -->
+      <div class="info-league">
+        <h3>Competition: {{ teamStats.league.name || "Data N/A" }}</h3>
+        <img
+          *ngIf="teamStats.league.logo"
+          [src]="teamStats.league.logo"
+          alt="League Logo"
+        />
+      </div>
+      <!-- Country Flag -->
+      <div class="info-country">
+        <h3>Country: {{ teamStats.league.country || "Data N/A" }}</h3>
+        <img
+          *ngIf="teamStats.league.flag"
+          [src]="teamStats.league.flag"
+          alt="Country Flag"
+        />
+      </div>
+      <!-- Season -->
+      <div class="season-results">
+        <h3>Season: {{ teamStats.league.season || "Data N/A" }}</h3>
+        <!-- Form Statistics -->
+        <h3>Form: {{ teamStats.form || "Data N/A" }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- /////////////////////////////////// Display the heading if showHeading is true ////////////////////////////////////// -->
+  <div *ngIf="showHeading" class="loading-message">
+    <h3>Loading data, please wait...</h3>
+  </div>
+
+  <!-- ///////////////////////////// Checking for API errors in certain situations ///////////////////////////////////////// -->
+  <div *ngIf="buttonClicked && apiResponseReceived">
+    <ng-container
+      *ngIf="teamStats?.form === null || isErrorInResponse(teamStats)"
+    >
+      <div class="error-message">
+        <h3>Data for this team, league, and season could not be found.</h3>
+        <h3>Please double-check the accuracy of each name and season.</h3>
+        <h3>
+          Also, ensure that the team participated in this competition during the
+          specified year.
+        </h3>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- /////////////////////////////////////////////////// TEAM-SEARCH-INFO ///////////////////////////////////////////////// -->
+  <div
+    *ngIf="
+      apiResponseReceived && teamStats !== null && teamStats?.form !== null
+    "
+    class="stats"
+  >
+    <div class="team-fixtures">
+      <h3>Games</h3>
+      <p>
+        Played at Home:
+        <strong>
+          {{
+            getNonNullValueTeams(teamStats.fixtures.played.home) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        Played Away:
+        <strong>{{
+          getNonNullValueTeams(teamStats.fixtures.played.away) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        Total Played:
+        <strong>{{
+          getNonNullValueTeams(teamStats.fixtures.played.total) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        Wins at Home:
+        <strong>{{
+          getNonNullValueTeams(teamStats.fixtures.wins.home) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        Wins Away:
+        <strong>{{
+          getNonNullValueTeams(teamStats.fixtures.wins.away) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        Total Wins:
+        <strong>{{
+          getNonNullValueTeams(teamStats.fixtures.wins.total) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        Draws at Home:
+        <strong>{{
+          getNonNullValueTeams(teamStats.fixtures.draws.home) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        Draws Away:
+        <strong>{{
+          getNonNullValueTeams(teamStats.fixtures.draws.away) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        Total Draws:
+        <strong>{{
+          getNonNullValueTeams(teamStats.fixtures.draws.total) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        Loses at Home:
+        <strong>{{
+          getNonNullValueTeams(teamStats.fixtures.loses.home) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        Loses Away:
+        <strong>{{
+          getNonNullValueTeams(teamStats.fixtures.loses.away) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        Total Loses:
+        <strong>{{
+          getNonNullValueTeams(teamStats.fixtures.loses.total) || "Data N/A"
+        }}</strong>
+      </p>
+    </div>
+    <!-- /////////////////////////////////////// Goals Statistics //////////////////////////////////////////////// -->
+
+    <div class="team-goals">
+      <h3>Goals Scored</h3>
+      <p>
+        Total Goals, <br />
+        Scored at Home:
+        <strong>
+          {{
+            getNonNullValueTeams(teamStats.goals.for.total.home) || "Data N/A"
+          }}
+        </strong>
+      </p>
+      <p>
+        Total Goals, <br />
+        Scored Away:
+        <strong>
+          {{
+            getNonNullValueTeams(teamStats.goals.for.total.away) || "Data N/A"
+          }}
+        </strong>
+      </p>
+      <p>
+        Total Goals, <br />
+        Scored:
+        <strong>
+          {{
+            getNonNullValueTeams(teamStats.goals.for.total.total) || "Data N/A"
+          }}
+        </strong>
+      </p>
+      <p>
+        Average Goals, <br />
+        Scored at Home:
+        <strong>
+          {{
+            getNonNullValueTeams(teamStats.goals.for.average.home) || "Data N/A"
+          }}
+        </strong>
+      </p>
+      <p>
+        Average Goals, <br />
+        Scored Away:<strong>
+          {{
+            getNonNullValueTeams(teamStats.goals.for.average.away) || "Data N/A"
+          }}
+        </strong>
+      </p>
+      <p>
+        Average Goals, <br />
+        Scored:<strong>
+          {{
+            getNonNullValueTeams(teamStats.goals.for.average.total) ||
+              "Data N/A"
+          }}
+        </strong>
+      </p>
+    </div>
+    <div class="goals">
+      <h3>
+        Goals Scored, <br />
+        by Minutes
+      </h3>
+
+      <p>
+        0-15:
+        <strong>{{
+          getNonNullValueTeams(teamStats.goals.for.minute["0-15"].total) ||
+            "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        16-30:
+        <strong>{{
+          getNonNullValueTeams(teamStats.goals.for.minute["16-30"].total) ||
+            "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        31-45:
+        <strong>{{
+          getNonNullValueTeams(teamStats.goals.for.minute["31-45"].total) ||
+            "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        46-60:
+        <strong>{{
+          getNonNullValueTeams(teamStats.goals.for.minute["46-60"].total) ||
+            "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        61-75:
+        <strong>{{
+          getNonNullValueTeams(teamStats.goals.for.minute["61-75"].total) ||
+            "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        76-90:
+        <strong>{{
+          getNonNullValueTeams(teamStats.goals.for.minute["76-90"].total) ||
+            "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        91-105:<strong>
+          {{
+            getNonNullValueTeams(teamStats.goals.for.minute["91-105"].total) ||
+              "Data N/A"
+          }}
+        </strong>
+      </p>
+      <p>
+        106-120:<strong>
+          {{
+            getNonNullValueTeams(teamStats.goals.for.minute["106-120"].total) ||
+              "Data N/A"
+          }}
+        </strong>
+      </p>
+    </div>
+
+    <div class="goals-perecent">
+      <h3>
+        Goals Scored, <br />
+        Percentages by Minutes
+      </h3>
+
+      <p>
+        0-15:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.for.minute["0-15"].percentage,
+              true
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        16-30:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.for.minute["16-30"].percentage,
+              true
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        31-45:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.for.minute["31-45"].percentage,
+              true
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        46-60:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.for.minute["46-60"].percentage,
+              true
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        61-75:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.for.minute["61-75"].percentage,
+              true
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        76-90:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.for.minute["76-90"].percentage,
+              true
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        91-105:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.for.minute["91-105"].percentage,
+              true
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        106-120:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.for.minute["106-120"].percentage,
+              true
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+    </div>
+    <div class="goals-against">
+      <h3>Goals Conceded</h3>
+      <p>
+        Total Goals, <br />
+        Conceded at Home:<strong>
+          {{
+            getNonNullValueTeams(teamStats.goals.against.total.home) ||
+              "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        Total Goals, <br />
+        Conceded Away:<strong>
+          {{
+            getNonNullValueTeams(teamStats.goals.against.total.away) ||
+              "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        Total Goals, <br />
+        Conceded:<strong>
+          {{
+            getNonNullValueTeams(teamStats.goals.against.total.total) ||
+              "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        Average Goals, <br />
+        Conceded at Home:<strong>
+          {{
+            getNonNullValueTeams(teamStats.goals.against.average.home) ||
+              "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        Average Goals, <br />
+        Conceded Away:<strong>
+          {{
+            getNonNullValueTeams(teamStats.goals.against.average.away) ||
+              "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        Average Goals, <br />
+        Conceded:<strong>
+          {{
+            getNonNullValueTeams(teamStats.goals.against.average.total) ||
+              "Data N/A"
+          }}</strong
+        >
+      </p>
+    </div>
+    <div class="goals-against-minutes">
+      <h3>
+        Goals Conceded, <br />
+        by Minutes
+      </h3>
+
+      <p>
+        0-15:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.against.minute["0-15"].total
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        16-30:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.against.minute["16-30"].total
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        31-45:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.against.minute["31-45"].total
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        46-60:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.against.minute["46-60"].total
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        61-75:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.against.minute["61-75"].total
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        76-90:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.against.minute["76-90"].total
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        91-105:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.against.minute["91-105"].total
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        106-120:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.against.minute["106-120"].total
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+    </div>
+    <div class="goals-against-percent">
+      <h3>
+        Goals Conceded, <br />
+        Percentages by Minutes
+      </h3>
+
+      <p>
+        0-15:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.against.minute["0-15"].percentage,
+              true
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        16-30:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.against.minute["16-30"].percentage,
+              true
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        31-45:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.against.minute["31-45"].percentage,
+              true
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        46-60:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.against.minute["46-60"].percentage,
+              true
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        61-75:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.against.minute["61-75"].percentage,
+              true
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        76-90:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.against.minute["76-90"].percentage,
+              true
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        91-105:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.against.minute["91-105"].percentage,
+              true
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        106-120:<strong>
+          {{
+            getNonNullValueTeams(
+              teamStats.goals.against.minute["106-120"].percentage,
+              true
+            ) || "Data N/A"
+          }}</strong
+        >
+      </p>
+    </div>
+
+    <!-- ////////////////////////////////////////// Biggest Streak Statistics ///////////////////////////////////////// -->
+    <div class="team-streak">
+      <h3>Biggest</h3>
+      <p>
+        Biggest Winning, <br />
+        Streak:<strong>
+          {{
+            getNonNullValueTeams(teamStats.biggest.streak.wins) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        Biggest Drawing, <br />
+        Streak:<strong>
+          {{
+            getNonNullValueTeams(teamStats.biggest.streak.draws) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        Biggest Losing, <br />
+        Streak:<strong>
+          {{
+            getNonNullValueTeams(teamStats.biggest.streak.loses) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        Wins at Home:<strong>
+          {{
+            getNonNullValueTeams(teamStats.biggest.wins.home) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        Wins Away:<strong>
+          {{
+            getNonNullValueTeams(teamStats.biggest.wins.away) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        Loses at Home:<strong>
+          {{
+            getNonNullValueTeams(teamStats.biggest.loses.home) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        Loses Away:
+        <strong>{{
+          getNonNullValueTeams(teamStats.biggest.loses.away) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        Goals Scored, <br />
+        at Home:<strong>
+          {{
+            getNonNullValueTeams(teamStats.biggest.goals.for.home) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        Goals Scored, <br />
+        Away:<strong>
+          {{
+            getNonNullValueTeams(teamStats.biggest.goals.for.away) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        Goals Conceded, <br />
+        at Home:<strong>
+          {{
+            getNonNullValueTeams(teamStats.biggest.goals.against.home) ||
+              "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        Goals Conceded, <br />
+        Away:<strong>
+          {{
+            getNonNullValueTeams(teamStats.biggest.goals.against.away) ||
+              "Data N/A"
+          }}</strong
+        >
+      </p>
+    </div>
+    <!-- /////////////////////////////// Clean Sheet and Failed to Score Statistics ////////////////////////////////////// -->
+    <div class="team-sheet">
+      <h3>Clean Sheets</h3>
+      <p>
+        Clean Sheets at Home:
+        <strong>{{
+          getNonNullValueTeams(teamStats.clean_sheet.home) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        Clean Sheets Away:<strong>
+          {{
+            getNonNullValueTeams(teamStats.clean_sheet.away) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        Total Clean Sheets:<strong>
+          {{
+            getNonNullValueTeams(teamStats.clean_sheet.total) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        Failed to Score at Home:
+        <strong>{{
+          getNonNullValueTeams(teamStats.failed_to_score.home) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        Failed to Score Away:
+        <strong>{{
+          getNonNullValueTeams(teamStats.failed_to_score.away) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        Total Failed to Score:<strong>
+          {{
+            getNonNullValueTeams(teamStats.failed_to_score.total) || "Data N/A"
+          }}</strong
+        >
+      </p>
+    </div>
+    <!-- ////////////////////////////////////////// Penalty Statistics ////////////////////////////////////////////////// -->
+    <div class="team-penalty">
+      <h3>Penalties</h3>
+      <p>
+        Penalty Goals Scored:<strong>
+          {{
+            getNonNullValueTeams(teamStats.penalty.scored.total) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        Penalty Goals, <br />
+        Percentage:<strong>
+          {{
+            getNonNullValueTeams(teamStats.penalty.scored.percentage, true) ||
+              "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        Penalty Goals Missed:<strong>
+          {{
+            getNonNullValueTeams(teamStats.penalty.missed.total) || "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        Penalty Goals, <br />
+        Missed Percentage:<strong>
+          {{
+            getNonNullValueTeams(teamStats.penalty.missed.percentage, true) ||
+              "Data N/A"
+          }}</strong
+        >
+      </p>
+      <p>
+        Total Penalty Goals:
+        <strong>{{
+          getNonNullValueTeams(teamStats.penalty.total) || "Data N/A"
+        }}</strong>
+      </p>
+    </div>
+    <!-- /////////////////////////////////////////////// Lineups Statistics /////////////////////////////////////////////// -->
+    <div class="team-lineup">
+      <h3>Lineups</h3>
+
+      <ng-container
+        *ngIf="
+          teamStats.lineups && teamStats.lineups.length > 0;
+          else noLineups
+        "
+      >
+        <div
+          *ngFor="let lineup of teamStats.lineups"
+          class="team-lineup-formation"
+        >
+          <p>
+            Formation:
+            <strong>{{ getNonNullValueTeams(lineup.formation) }}</strong>
+          </p>
+          <p>
+            Matches Played:
+            <strong>{{ getNonNullValueTeams(lineup.played) }}</strong>
+          </p>
+        </div>
+      </ng-container>
+
+      <ng-template #noLineups>
+        <p>Data N/A</p>
+      </ng-template>
+    </div>
+    <!-- ////////////////////////////////////////////////// Cards Statistics /////////////////////////////////////////////// -->
+    <div class="team-cards">
+      <h3>
+        Yellow Cards, <br />
+        by Time Range
+      </h3>
+
+      <p>
+        0-15:
+        <strong>{{
+          getNonNullValueTeams(
+            teamStats.cards.yellow["0-15"].total,
+            false,
+            true
+          ) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        16-30:
+        <strong>{{
+          getNonNullValueTeams(
+            teamStats.cards.yellow["16-30"].total,
+            false,
+            true
+          ) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        31-45:
+        <strong>{{
+          getNonNullValueTeams(
+            teamStats.cards.yellow["31-45"].total,
+            false,
+            true
+          ) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        46-60:
+        <strong>{{
+          getNonNullValueTeams(
+            teamStats.cards.yellow["46-60"].total,
+            false,
+            true
+          ) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        61-75:
+        <strong>{{
+          getNonNullValueTeams(
+            teamStats.cards.yellow["61-75"].total,
+            false,
+            true
+          ) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        76-90:
+        <strong>{{
+          getNonNullValueTeams(
+            teamStats.cards.yellow["76-90"].total,
+            false,
+            true
+          ) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        91-105:
+        <strong>{{
+          getNonNullValueTeams(
+            teamStats.cards.yellow["91-105"].total,
+            false,
+            true
+          ) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        106-120:
+        <strong>{{
+          getNonNullValueTeams(
+            teamStats.cards.yellow["106-120"].total,
+            false,
+            true
+          ) || "Data N/A"
+        }}</strong>
+      </p>
+    </div>
+    <div class="team-cards">
+      <h3>
+        Red Cards, <br />
+        by Time Range
+      </h3>
+
+      <p>
+        0-15:
+        <strong>{{
+          getNonNullValueTeams(
+            teamStats.cards.red["0-15"].total,
+            false,
+            true
+          ) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        16-30:
+        <strong>{{
+          getNonNullValueTeams(
+            teamStats.cards.red["16-30"].total,
+            false,
+            true
+          ) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        31-45:
+        <strong>{{
+          getNonNullValueTeams(
+            teamStats.cards.red["31-45"].total,
+            false,
+            true
+          ) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        46-60:
+        <strong>{{
+          getNonNullValueTeams(
+            teamStats.cards.red["46-60"].total,
+            false,
+            true
+          ) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        61-75:
+        <strong>{{
+          getNonNullValueTeams(
+            teamStats.cards.red["61-75"].total,
+            false,
+            true
+          ) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        76-90:
+        <strong>{{
+          getNonNullValueTeams(
+            teamStats.cards.red["76-90"].total,
+            false,
+            true
+          ) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        91-105:
+        <strong>{{
+          getNonNullValueTeams(
+            teamStats.cards.red["91-105"].total,
+            false,
+            true
+          ) || "Data N/A"
+        }}</strong>
+      </p>
+      <p>
+        106-120:
+        <strong>{{
+          getNonNullValueTeams(
+            teamStats.cards.red["106-120"].total,
+            false,
+            true
+          ) || "Data N/A"
+        }}</strong>
+      </p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,82 @@
+@import "../../styles.scss";
+@import "../scss/buttons";
+
+footer {
+  position: relative;
+  background-color: $footer-background;
+  box-shadow: var(--box-shadow10px);
+  padding-left: 0;
+  .footer-text {
+    padding: 0.5rem 0.5rem 0.5rem 0;
+  }
+  h6,
+  p {
+    margin-bottom: 0;
+    text-align: center;
+    color: $footer-color;
+    padding-top: 0;
+  }
+
+  h6 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left: 1.5rem;
+    .footer {
+      padding-left: 0;
+    }
+  }
+
+  .linkedin-avatar {
+    vertical-align: text-top;
+  }
+
+  .important-note {
+    position: fixed;
+    bottom: 4rem;
+    right: 1.5rem;
+    background-color: $btn-color;
+
+    color: $footer-color;
+    padding: 0.5rem;
+    border-radius: var(--radius10);
+    box-shadow: var(--box-shadow10px);
+    width: 15rem;
+    height: 10rem;
+    overflow: auto;
+    white-space: normal;
+
+    .close-btn {
+      height: 25px;
+      width: 25px;
+      color: $btn-color;
+      background-color: $btn-background;
+      border-radius: 50%;
+      margin-bottom: 5px;
+      margin-left: 200px;
+      border: 0;
+    }
+
+    p {
+      margin: 0;
+      text-align: right;
+      color: black;
+      font-size: 0.8rem;
+      margin: 3px;
+    }
+  }
+}
+@media (max-width: 575px) {
+  .important-note {
+    left: 50%;
+    transform: translateX(-50%);
+
+    .close-btn {
+      margin-left: 0 !important;
+    }
+
+    p {
+      text-align: center !important;
+    }
+  }
+}

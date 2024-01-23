@@ -1,0 +1,26 @@
+@import "../../styles.scss";
+@import "./buttons";
+
+.input-container {
+  background-color: $input-container;
+
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: var(--radius15);
+  border: 0;
+  width: auto;
+  block-size: fit-content;
+
+  box-shadow: var(--box-shadow10px);
+
+  .form-group {
+    margin-bottom: 1rem;
+    input {
+      border-radius: var(--radius10);
+      background-color: $form-input;
+    }
+    label {
+      color: $form-color;
+    }
+  }
+}

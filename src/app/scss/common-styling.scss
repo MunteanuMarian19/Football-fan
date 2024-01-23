@@ -1,0 +1,126 @@
+@import "../../styles.scss";
+@import "./form-input.scss";
+
+.container-fluid {
+  margin: 0;
+  padding: 0;
+  min-width: 250px;
+
+  .info {
+    width: auto;
+    min-width: auto;
+    .sub-info {
+      padding: 1rem;
+      margin: 1rem;
+      background-color: $sub-info;
+      border-radius: var(--radius15);
+      box-shadow: var(--box-shadow10px);
+
+      .name-picture {
+        background: $h2_h3_h4_a-background;
+      }
+
+      .info-team,
+      .info-league,
+      .info-country,
+      .season-results {
+        background: $h2_h3_h4_a-background;
+      }
+
+      &:last-child {
+        margin-bottom: 1rem;
+      }
+      > * {
+        padding: 1rem;
+        justify-content: space-evenly;
+      }
+
+      p {
+        border-radius: var(--radius10);
+        background-color: $p-background;
+        color: $p-color;
+        &:last-child {
+          margin-bottom: 0rem;
+        }
+      }
+    }
+  }
+
+  .stats {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-bottom: 1rem;
+
+    h4 {
+      background-color: $h2_h3_h4_a-background;
+      border-radius: var(--radius10);
+      text-align: center;
+      padding: 0.5rem;
+    }
+
+    > * {
+      padding: 1rem;
+      margin: 1rem;
+      block-size: fit-content;
+      text-align: left;
+      border-radius: var(--radius15);
+      max-width: fit-content;
+      background-color: $stats-background;
+      color: $p-color;
+      box-shadow: var(--box-shadow10px);
+
+      p:last-child {
+        margin-bottom: 0;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+      > * {
+        padding: 5px;
+      }
+    }
+  }
+
+  .loading-message {
+    width: fit-content;
+    align-items: center;
+
+    h3 {
+      text-align: center;
+      margin: 1rem;
+      padding: 1rem;
+      color: $loading-color;
+    }
+  }
+
+  .error-message {
+    width: fit-content;
+
+    h3 {
+      text-align: center;
+      margin: 1rem;
+      margin-bottom: 30px;
+      padding: 1rem;
+      background-color: $error-background;
+      color: $error-color;
+      border-radius: var(--radius15);
+      box-shadow: var(--box-shadow10px);
+    }
+  }
+}
+
+img {
+  height: 4.5rem;
+  border-radius: var(--radius10);
+  padding: 5px;
+  margin-left: 0.6rem;
+}
+
+h2,
+h3,
+h4 {
+  color: $h2_h3_h4_a-color;
+  font-weight: 600;
+}
